@@ -42,8 +42,29 @@ const useStyles = makeStyles(styles);
 export default function Dashboard() {
   const classes = useStyles();
 
-  const [userCount, setUserCount] = useState('')
-  const [financeCount, setFinanceCount] = useState('')
+  const [salesData, setSalesData] = useState({
+    labels: ["M", "T", "W", "T", "F", "S", "S"],
+    series: [[12, 17, 7, 17, 23, 18, 38]]
+  });
+  const [userData, setUserData] = useState({
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mai",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
+  });
+  const [userCount, setUserCount] = useState('');
+  const [financeCount, setFinanceCount] = useState('');
 
   useEffect(()=>{
     const timer = setTimeout(() => {
@@ -59,8 +80,29 @@ export default function Dashboard() {
       alert('Bad Request ' + resp.error)
       return;
     }
+    let userArray = [];
+    for (let i = 0; i < resp.data.users.length; i++) {
+      userArray.push(i);
+    }
     // await countUsers(resp.data.users.length);
       setUserCount(resp.data.users.length)
+      // setUserData({
+      //   labels: [
+      //     "Jan",
+      //     "Feb",
+      //     "Mar",
+      //     "Apr",
+      //     "Mai",
+      //     "Jun",
+      //     "Jul",
+      //     "Aug",
+      //     "Sep",
+      //     "Oct",
+      //     "Nov",
+      //     "Dec"
+      //   ],
+      //   series: [userArray]
+      // })
   }
   const checkFinanceApi = async () =>{
     const resp = await FinanceApi.main.get(ROUTE_FINANCE, null, null);
@@ -76,12 +118,18 @@ export default function Dashboard() {
   const calculateFinancials = async(myData)=>{
     console.log(myData)
     let total = 0
+    let financeArray = [];
     for (let i=0; i<myData.length; i++){
       console.log(myData[i].amountCharged)
       total += Number(myData[i].amountCharged)
+      financeArray.push(total);
     }
     console.log(total)
     setFinanceCount(total)
+    // setSalesData({
+    //   labels: ["M", "T", "W", "T", "F", "S", "S"],
+    //   series: [financeArray]
+    // })
   }
 
 
@@ -204,7 +252,7 @@ export default function Dashboard() {
             <CardHeader color="success">
               <ChartistGraph
                 className="ct-chart"
-                data={dailySalesChart.data}
+                data={salesData}
                 type="Line"
                 options={dailySalesChart.options}
                 listener={dailySalesChart.animation}
@@ -231,7 +279,7 @@ export default function Dashboard() {
             <CardHeader color="warning">
               <ChartistGraph
                 className="ct-chart"
-                data={newUsersChart.data}
+                data={userData}
                 type="Bar"
                 options={newUsersChart.options}
                 responsiveOptions={newUsersChart.responsiveOptions}
