@@ -2,7 +2,9 @@
 
 # dependencies
 /material-dashboard-react/node_modules
-/node_modules
+*/node_modules
+*.swp
+.idea
 
 # testing
 /coverage
