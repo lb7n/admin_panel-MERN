@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 app.set('json spaces', 4)
 app.use(cors())
@@ -14,6 +15,14 @@ const AllMyUserRoutes = require("../dummyserver/routes/users.routes");
 const AllMyFinanceRoutes = require("../dummyserver/routes/finances.routes")
 AllMyUserRoutes(app);
 AllMyFinanceRoutes(app)
+
+const authentication = require("../dummyserver/routes/authentication.routes");
+app.use("/authentication", authentication);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// other middleware
+app.use(bodyParser.json());
 
 app.listen(8000, () => console.log("The server is all fired up on port 8000"));
 
